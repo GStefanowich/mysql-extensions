@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>TheElm.MySql</RootNamespace>
+        
+        <AssemblyName>TheElm.MySql</AssemblyName>
+        <OutputType>Library</OutputType>
+        
+        <!-- NuGet -->
+        <PackageId>TheElm.MySql</PackageId>
+        <Version>1.0.0</Version>
+        
+        <PublishRelease>true</PublishRelease>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        
+        <!-- Package Information -->
+        <ProductName>TheElm.MySql</ProductName>
+        <Authors>Greg Stefanowich</Authors>
+        <Description>Library for combing LINQ and MySqlConnector</Description>
+        
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageProjectUrl>https://github.com/GStefanowich/mysql-extensions</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/GStefanowich/mysql-extensions</RepositoryUrl>
+        <PackageTags>json</PackageTags>
+        <NeutralLanguage>en</NeutralLanguage>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath=""/>
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="MySqlConnector" Version="2.4.0" />
+    </ItemGroup>
+</Project>
