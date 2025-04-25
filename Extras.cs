@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MySqlConnector;
 
 namespace TheElm.MySql {
