@@ -11,7 +11,13 @@ It adds a lot of extension methods for dealing with Null checks, as well as impl
 ```csharp
 MySqlDataSource source;
 
+// Asynchronous
 await source.ExecuteNonQueryAsync("INSERT INTO `table` (`col`) VALUES (@col)", [
+    new MySqlParameter("col", value)
+]);
+
+// Synchronous
+source.ExecuteNonQuery("INSERT INTO `table` (`col`) VALUES (@col)", [
     new MySqlParameter("col", value)
 ]);
 ```
@@ -21,7 +27,15 @@ await source.ExecuteNonQueryAsync("INSERT INTO `table` (`col`) VALUES (@col)", [
 ```csharp
 MySqlDataSource source;
 
+// Asynchronous
 await foreach( MySqlDataReader reader in source.ReadAsync("SELECT `col` FROM `table`") ) {
+    string value = reader.GetString("col");
+    
+    // ...
+}
+
+// Synchronous
+foreach( MySqlDataReader reader in source.Read("SELECT `col` FROM `table`") ) {
     string value = reader.GetString("col");
     
     // ...
@@ -33,9 +47,15 @@ await foreach( MySqlDataReader reader in source.ReadAsync("SELECT `col` FROM `ta
 ```csharp
 MySqlDataSource source;
 
+// Asynchronous
 string[] values = await source.ReadAsync("SELECT `col` FROM `table`")
     .Select(reader => reader.GetString("col"))
     .ToArrayAsync();
+
+// Synchronous
+values = await source.Read("SELECT `col` FROM `table`")
+    .Select(reader => reader.GetString("col"))
+    .ToArray();
 ```
 
 - Nullables
