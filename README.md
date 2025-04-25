@@ -53,7 +53,7 @@ string[] values = await source.ReadAsync("SELECT `col` FROM `table`")
     .ToArrayAsync();
 
 // Synchronous
-values = await source.Read("SELECT `col` FROM `table`")
+values = source.Read("SELECT `col` FROM `table`")
     .Select(reader => reader.GetString("col"))
     .ToArray();
 ```
