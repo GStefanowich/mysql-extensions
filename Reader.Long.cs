@@ -4,14 +4,21 @@ using MySqlConnector;
 namespace TheElm.MySql {
     public static partial class Reader {
         [return: NotNullIfNotNull(nameof(fallback))]
-        public static long? GetNullableInt64( this MySqlDataReader reader, string key, long? fallback = null )
-            => reader.TryGetInt64(key, out long value) ? value : fallback;
+        public static long? GetNullableInt64( this MySqlDataReader reader, string column, long? fallback = null )
+            => reader.TryGetInt64(column, out long value) ? value : fallback;
         
-        public static bool TryGetInt64( this MySqlDataReader reader, string key, out long value )
-            => reader.TryGetInt64(reader.GetOrdinal(key), out value);
+        [return: NotNullIfNotNull(nameof(fallback))]
+        public static long? GetNullableInt64( this MySqlDataReader reader, string table, string column, long? fallback = null )
+            => reader.TryGetInt64(table, column, out long value) ? value : fallback;
+        
+        public static bool TryGetInt64( this MySqlDataReader reader, string column, out long value )
+            => reader.TryGetInt64(reader.GetOrdinal(column, null), out value);
+        
+        public static bool TryGetInt64( this MySqlDataReader reader, string table, string column, out long value )
+            => reader.TryGetInt64(reader.GetOrdinal(column, table), out value);
         
         public static bool TryGetInt64( this MySqlDataReader reader, int ordinal, out long value ) {
-            if ( !reader.IsDBNull(ordinal) ) {
+            if ( ordinal >= 0 && !reader.IsDBNull(ordinal) ) {
                 value = reader.GetInt64(ordinal);
                 return true;
             }
@@ -21,14 +28,21 @@ namespace TheElm.MySql {
         }
         
         [return: NotNullIfNotNull(nameof(fallback))]
-        public static ulong? GetNullableUInt64( this MySqlDataReader reader, string key, ulong? fallback = null )
-            => reader.TryGetUInt64(key, out ulong value) ? value : fallback;
+        public static ulong? GetNullableUInt64( this MySqlDataReader reader, string column, ulong? fallback = null )
+            => reader.TryGetUInt64(column, out ulong value) ? value : fallback;
         
-        public static bool TryGetUInt64( this MySqlDataReader reader, string key, out ulong value )
-            => reader.TryGetUInt64(reader.GetOrdinal(key), out value);
+        [return: NotNullIfNotNull(nameof(fallback))]
+        public static ulong? GetNullableUInt64( this MySqlDataReader reader, string table, string column, ulong? fallback = null )
+            => reader.TryGetUInt64(table, column, out ulong value) ? value : fallback;
+        
+        public static bool TryGetUInt64( this MySqlDataReader reader, string column, out ulong value )
+            => reader.TryGetUInt64(reader.GetOrdinal(column, null), out value);
+        
+        public static bool TryGetUInt64( this MySqlDataReader reader, string table, string column, out ulong value )
+            => reader.TryGetUInt64(reader.GetOrdinal(column, table), out value);
         
         public static bool TryGetUInt64( this MySqlDataReader reader, int ordinal, out ulong value ) {
-            if ( !reader.IsDBNull(ordinal) ) {
+            if ( ordinal >= 0 && !reader.IsDBNull(ordinal) ) {
                 value = reader.GetUInt64(ordinal);
                 return true;
             }

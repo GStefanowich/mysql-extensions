@@ -4,14 +4,21 @@ using MySqlConnector;
 namespace TheElm.MySql {
     public static partial class Reader {
         [return: NotNullIfNotNull(nameof(fallback))]
-        public static float? GetNullableFloat( this MySqlDataReader reader, string key, float? fallback = null )
-            => reader.TryGetFloat(key, out float value) ? value : fallback;
+        public static float? GetNullableFloat( this MySqlDataReader reader, string column, float? fallback = null )
+            => reader.TryGetFloat(column, out float value) ? value : fallback;
         
-        public static bool TryGetFloat( this MySqlDataReader reader, string key, out float value )
-            => reader.TryGetFloat(reader.GetOrdinal(key), out value);
+        [return: NotNullIfNotNull(nameof(fallback))]
+        public static float? GetNullableFloat( this MySqlDataReader reader, string table, string column, float? fallback = null )
+            => reader.TryGetFloat(table, column, out float value) ? value : fallback;
+        
+        public static bool TryGetFloat( this MySqlDataReader reader, string column, out float value )
+            => reader.TryGetFloat(reader.GetOrdinal(column, null), out value);
+        
+        public static bool TryGetFloat( this MySqlDataReader reader, string table, string column, out float value )
+            => reader.TryGetFloat(reader.GetOrdinal(column, table), out value);
         
         public static bool TryGetFloat( this MySqlDataReader reader, int ordinal, out float value ) {
-            if ( !reader.IsDBNull(ordinal) ) {
+            if ( ordinal >= 0 && !reader.IsDBNull(ordinal) ) {
                 value = reader.GetFloat(ordinal);
                 return true;
             }
@@ -21,14 +28,21 @@ namespace TheElm.MySql {
         }
         
         [return: NotNullIfNotNull(nameof(fallback))]
-        public static double? GetNullableDouble( this MySqlDataReader reader, string key, double? fallback = null )
-            => reader.TryGetDouble(key, out double value) ? value : fallback;
+        public static double? GetNullableDouble( this MySqlDataReader reader, string column, double? fallback = null )
+            => reader.TryGetDouble(column, out double value) ? value : fallback;
         
-        public static bool TryGetDouble( this MySqlDataReader reader, string key, out double value )
-            => reader.TryGetDouble(reader.GetOrdinal(key), out value);
+        [return: NotNullIfNotNull(nameof(fallback))]
+        public static double? GetNullableDouble( this MySqlDataReader reader, string table, string column, double? fallback = null )
+            => reader.TryGetDouble(table, column, out double value) ? value : fallback;
+        
+        public static bool TryGetDouble( this MySqlDataReader reader, string column, out double value )
+            => reader.TryGetDouble(reader.GetOrdinal(column, null), out value);
+        
+        public static bool TryGetDouble( this MySqlDataReader reader, string table, string column, out double value )
+            => reader.TryGetDouble(reader.GetOrdinal(column, table), out value);
         
         public static bool TryGetDouble( this MySqlDataReader reader, int ordinal, out double value ) {
-            if ( !reader.IsDBNull(ordinal) ) {
+            if ( ordinal >= 0 && !reader.IsDBNull(ordinal) ) {
                 value = reader.GetDouble(ordinal);
                 return true;
             }
