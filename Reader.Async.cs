@@ -1,30 +1,29 @@
-using System.Collections;
-using MySqlConnector;
+﻿using MySqlConnector;
 
 namespace TheElm.MySql {
     public static partial class Reader {
         /// <summary>
-        /// Open a new Connection on the database and execute the SELECT query
+        /// Open a new Connection on the database and execute the SELECT query asynchronously
         /// The connection will automatically be disposed after reading
         /// </summary>
         /// <param name="database">Data source for connecting to mysql</param>
         /// <param name="query">SQL Query string</param>
-        /// <returns>Returns an Enumerable, where each iteration returns a readable row from the query</returns>
-        public static IEnumerable<MySqlDataReader> Read( this MySqlDataSource database, string query )
-            => database.Read(query, []);
+        /// <returns>Returns an AsyncEnumerable, where each iteration returns a readable row from the query</returns>
+        public static IAsyncEnumerable<MySqlDataReader> ReadAsync( this MySqlDataSource database, string query )
+            => database.ReadAsync(query, []);
         
         /// <summary>
-        /// Open a new Connection on the database and execute the SELECT query
+        /// Open a new Connection on the database and execute the SELECT query asynchronously
         /// The connection will automatically be disposed after reading
         /// </summary>
         /// <param name="database">Data source for connecting to mysql</param>
         /// <param name="query">SQL Query string</param>
         /// <param name="parameters">Enumerable set of parameters to be substituted into the query string</param>
-        /// <returns>Returns an Enumerable, where each iteration returns a readable row from the query</returns>
-        public static IEnumerable<MySqlDataReader> Read( this MySqlDataSource database, string query, IEnumerable<MySqlParameter> parameters ) {
+        /// <returns>Returns an AsyncEnumerable, where each iteration returns a readable row from the query</returns>
+        public static IAsyncEnumerable<MySqlDataReader> ReadAsync( this MySqlDataSource database, string query, IEnumerable<MySqlParameter> parameters ) {
             MySqlCommand command = new(query);
             command.Parameters.AddRange(parameters);
-            return new DataReaderEnumerable(database, null, command);
+            return new AsyncDataReaderEnumerable(database, null, command);
         }
         
         /// <summary>
@@ -32,9 +31,9 @@ namespace TheElm.MySql {
         /// </summary>
         /// <param name="connection">A database connection</param>
         /// <param name="query">SQL Query string</param>
-        /// <returns>Returns an Enumerable, where each iteration returns a readable row from the query</returns>
-        public static IEnumerable<MySqlDataReader> Read( this MySqlConnection connection, string query )
-            => connection.Read(query, []);
+        /// <returns>Returns an AsyncEnumerable, where each iteration returns a readable row from the query</returns>
+        public static IAsyncEnumerable<MySqlDataReader> ReadAsync( this MySqlConnection connection, string query )
+            => connection.ReadAsync(query, []);
         
         /// <summary>
         /// Execute a query on an existing database connection
@@ -42,13 +41,13 @@ namespace TheElm.MySql {
         /// <param name="connection">A database connection</param>
         /// <param name="query">SQL Query string</param>
         /// <param name="parameters">Enumerable set of parameters to be substituted into the query string</param>
-        /// <returns>Returns an Enumerable, where each iteration returns a readable row from the query</returns>
-        public static IEnumerable<MySqlDataReader> Read( this MySqlConnection connection, string query, IEnumerable<MySqlParameter> parameters ) {
+        /// <returns>Returns an AsyncEnumerable, where each iteration returns a readable row from the query</returns>
+        public static IAsyncEnumerable<MySqlDataReader> ReadAsync( this MySqlConnection connection, string query, IEnumerable<MySqlParameter> parameters ) {
             MySqlCommand command = new(query);
             
             command.Parameters.AddRange(parameters);
             
-            return new DataReaderEnumerable(null, connection, command );
+            return new AsyncDataReaderEnumerable(null, connection, command );
         }
         
         /// <summary>
@@ -56,9 +55,9 @@ namespace TheElm.MySql {
         /// </summary>
         /// <param name="transaction"></param>
         /// <param name="query">SQL Query string</param>
-        /// <returns>Returns an Enumerable, where each iteration returns a readable row from the query</returns>
-        public static IEnumerable<MySqlDataReader> Read( this MySqlTransaction transaction, string query )
-            => transaction.Read(query, []);
+        /// <returns>Returns an AsyncEnumerable, where each iteration returns a readable row from the query</returns>
+        public static IAsyncEnumerable<MySqlDataReader> ReadAsync( this MySqlTransaction transaction, string query )
+            => transaction.ReadAsync(query, []);
         
         /// <summary>
         /// Execute a query on an existing transaction
@@ -66,21 +65,21 @@ namespace TheElm.MySql {
         /// <param name="transaction"></param>
         /// <param name="query">SQL Query string</param>
         /// <param name="parameters">Enumerable set of parameters to be substituted into the query string</param>
-        /// <returns>Returns an Enumerable, where each iteration returns a readable row from the query</returns>
-        public static IEnumerable<MySqlDataReader> Read( this MySqlTransaction transaction, string query, IEnumerable<MySqlParameter> parameters ) {
+        /// <returns>Returns an AsyncEnumerable, where each iteration returns a readable row from the query</returns>
+        public static IAsyncEnumerable<MySqlDataReader> ReadAsync( this MySqlTransaction transaction, string query, IEnumerable<MySqlParameter> parameters ) {
             MySqlCommand command = new(query, transaction.Connection, transaction);
             
             command.Parameters.AddRange(parameters);
             
-            return new DataReaderEnumerable(null, transaction.Connection, command );
+            return new AsyncDataReaderEnumerable(null, transaction.Connection, command );
         }
         
-        private sealed class DataReaderEnumerable : IEnumerable<MySqlDataReader> {
+        private sealed class AsyncDataReaderEnumerable : IAsyncEnumerable<MySqlDataReader> {
             private readonly MySqlDataSource? Database;
             private readonly MySqlConnection? Connection;
             private readonly MySqlCommand Command;
             
-            public DataReaderEnumerable(
+            public AsyncDataReaderEnumerable(
                 MySqlDataSource? database,
                 MySqlConnection? connection,
                 MySqlCommand command
@@ -91,15 +90,12 @@ namespace TheElm.MySql {
             }
             
             /// <inheritdoc />
-            IEnumerator IEnumerable.GetEnumerator()
-                => this.GetEnumerator();
-            
-            /// <inheritdoc />
-            public IEnumerator<MySqlDataReader> GetEnumerator()
-                => new DataReaderEnumerator(this.Command, this.Connection, this.Database);
+            public IAsyncEnumerator<MySqlDataReader> GetAsyncEnumerator( CancellationToken cancellationToken = default )
+                => new AsyncDataReaderEnumerator(this.Command, this.Connection, this.Database, cancellationToken);
         }
         
-        private sealed class DataReaderEnumerator : IEnumerator<MySqlDataReader> {
+        private sealed class AsyncDataReaderEnumerator : IAsyncEnumerator<MySqlDataReader> {
+            private readonly CancellationToken CancellationToken;
             private readonly bool CloseConnection;
             
             private readonly MySqlDataSource? Database;
@@ -108,10 +104,11 @@ namespace TheElm.MySql {
             private MySqlConnection? Connection { get => this.Command.Connection; set => this.Command.Connection = value; }
             private MySqlDataReader? Reader;
             
-            public DataReaderEnumerator(
+            public AsyncDataReaderEnumerator(
                 MySqlCommand command,
                 MySqlConnection? connection = null,
-                MySqlDataSource? database = null
+                MySqlDataSource? database = null,
+                CancellationToken cancellation = default
             ) {
                 if ( database is null && connection is null ) {
                     throw new InvalidOperationException("Must provide a datasource or a datasource connection");
@@ -120,54 +117,43 @@ namespace TheElm.MySql {
                 this.Command = command;
                 this.Database = database;
                 this.Connection = connection;
+                this.CancellationToken = cancellation;
                 this.CloseConnection = database is not null;
             }
-            
-            /// <inheritdoc />
-            object? IEnumerator.Current => this.Reader;
             
             /// <inheritdoc />
             public MySqlDataReader Current => this.Reader ?? throw new Exception("Accessing datareader in an invalid state");
             
             /// <inheritdoc />
-            public bool MoveNext() {
+            public async ValueTask<bool> MoveNextAsync() {
+                this.CancellationToken.ThrowIfCancellationRequested();
+                
                 // Open a new connection to the database if we're missing one
                 if ( this.Connection is null ) {
                     if ( this.Database is null ) {
                         throw new InvalidOperationException("Missing database in which to open a connection with");
                     }
                     
-                    this.Connection = this.Database.OpenConnection();
+                    this.Connection = await this.Database.OpenConnectionAsync(this.CancellationToken);
                 }
                 
                 // Execute the query and begin reading if we haven't
-                this.Reader ??= this.Command.ExecuteReader();
+                this.Reader ??= await this.Command.ExecuteReaderAsync(this.CancellationToken);
                 
                 // Read the new row
-                return this.Reader.Read();
+                return await this.Reader.ReadAsync(this.CancellationToken);
             }
             
             /// <inheritdoc />
-            public void Reset() {
+            public async ValueTask DisposeAsync() {
                 if ( this.Reader is {} reader ) {
-                    // Dispose of the current reader
-                    reader.Dispose();
-                    
-                    // Reset the reader to NULL to allow a new reader
-                    this.Reader = null;
-                }
-            }
-            
-            /// <inheritdoc />
-            public void Dispose() {
-                if ( this.Reader is {} reader ) {
-                    reader.Dispose();
+                    await reader.DisposeAsync();
                 }
                 
-                this.Command.Dispose();
+                await this.Command.DisposeAsync();
                 
                 if ( this.CloseConnection && this.Connection is {} connection ) {
-                    connection.Dispose();
+                    await connection.DisposeAsync();
                 }
             }
         }
