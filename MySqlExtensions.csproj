@@ -25,7 +25,7 @@
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageProjectUrl>https://github.com/GStefanowich/mysql-extensions</PackageProjectUrl>
         <RepositoryUrl>https://github.com/GStefanowich/mysql-extensions</RepositoryUrl>
-        <PackageTags>json</PackageTags>
+        <PackageTags>mysql sql database async</PackageTags>
         <NeutralLanguage>en</NeutralLanguage>
     </PropertyGroup>
     <ItemGroup>
