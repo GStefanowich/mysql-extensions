@@ -17,6 +17,16 @@ namespace TheElm.MySql {
         public static MySqlCommand CreateCommand( this MySqlConnection connection, string query, IEnumerable<MySqlParameter> parameters )
             => connection.CreateCommand(query, command => command.Parameters.AddRange(parameters));
         
+        public static MySqlCommand CreateCommand( this MySqlTransaction transaction )
+            => new(transaction.Connection, transaction);
+        
+        public static MySqlCommand CreateCommand( this MySqlTransaction transaction, string query, Action<MySqlCommand>? func = null )
+            => Command.Create(query, func)
+                .WithTransaction(transaction);
+        
+        public static MySqlCommand CreateCommand( this MySqlTransaction transaction, string query, IEnumerable<MySqlParameter> parameters )
+            => transaction.CreateCommand(query, command => command.Parameters.AddRange(parameters));
+        
         public static MySqlCommand WithTransaction( this MySqlCommand command, MySqlTransaction transaction ) {
             command.Transaction = transaction;
             command.Connection = transaction.Connection;
