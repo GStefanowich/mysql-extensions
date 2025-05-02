@@ -115,46 +115,50 @@ await foreach( MySqlDataReader reader in source.ReadAsync("SELECT `col` FROM `ta
 
 ## Versions
 
-### 1.2.0
+### 1.6.0
 
-- Added `table?` optional parameter for narrowing down ordinal (Allows duplicate keys in SELECT queries, if different tables share the same key)
-- Added `GetOrdinal` and `TryGetOrdinal` methods
-
-### 1.3.0
-
-- Added `table, column` getters
-  - Added `GetByte`
-  - Added `GetSByte`
-  - Added `GetDatetime`
-  - Added `GetDateTimeOffset`
-  - Added `GetDateOnly`
-  - Added `GetMySqlDateTime`
-  - Added `GetInt16`
-  - Added `GetUInt16`
-  - Added `GetInt32`
-  - Added `GetUInt32`
-  - Added `GetInt64`
-  - Added `GetUInt64`
-  - Added `GetDouble`
-  - Added `GetFloat`
-  - Added `GetString`
-- Swapped `column, table?` signature on `GetOrdinal` to `table?, column`
-
-### 1.4.0
-
-- Added `table, column` getters
-  - Added `GetBoolean`
-  - Added `GetBytes`
-- Added missing types
-  - Added `Char`
-  - Added `Guid`
-  - Added `TimeOnly`
-  - Added `TimeSpan`
-  - Added `MySqlDecimal`
-  - Added `MySqlGeometry`
-  - Added `TextReader`
-- Added `FieldType` getter
+- Added `GetBinaryString` helper method for reading binary columns
 
 ### 1.5.0
 
 - Added `CreateCommand` to `MySqlTransaction`
+
+### 1.4.0
+
+- Added `table, column` getters
+    - Added `GetBoolean`
+    - Added `GetBytes`
+- Added missing types
+    - Added `Char`
+    - Added `Guid`
+    - Added `TimeOnly`
+    - Added `TimeSpan`
+    - Added `MySqlDecimal`
+    - Added `MySqlGeometry`
+    - Added `TextReader`
+- Added `FieldType` getter
+
+### 1.3.0
+
+- Added `table, column` getters
+    - Added `GetByte`
+    - Added `GetSByte`
+    - Added `GetDatetime`
+    - Added `GetDateTimeOffset`
+    - Added `GetDateOnly`
+    - Added `GetMySqlDateTime`
+    - Added `GetInt16`
+    - Added `GetUInt16`
+    - Added `GetInt32`
+    - Added `GetUInt32`
+    - Added `GetInt64`
+    - Added `GetUInt64`
+    - Added `GetDouble`
+    - Added `GetFloat`
+    - Added `GetString`
+- Swapped `column, table?` signature on `GetOrdinal` to `table?, column`
+
+### 1.2.0
+
+- Added `table?` optional parameter for narrowing down ordinal (Allows duplicate keys in SELECT queries, if different tables share the same key)
+- Added `GetOrdinal` and `TryGetOrdinal` methods

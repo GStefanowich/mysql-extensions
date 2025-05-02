@@ -20,8 +20,8 @@ namespace TheElm.MySql {
             => reader.TryGetTextReader(reader.GetOrdinal(table, column), out value);
         
         public static bool TryGetTextReader( this MySqlDataReader reader, int ordinal, [NotNullWhen(true)] out TextReader? value ) {
-            if ( ordinal >= 0 && !reader.IsDBNull(ordinal) ) {
-                value = reader.GetTextReader(ordinal);
+            if ( reader.TryGetString(ordinal, out string? str) ) {
+                value = new StringReader(str);
                 return true;
             }
             
