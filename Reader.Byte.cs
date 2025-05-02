@@ -6,6 +6,9 @@ namespace TheElm.MySql {
         public static byte GetByte( this MySqlDataReader reader, string table, string column )
             => reader.GetByte(reader.GetOrdinal(table, column));
         
+        public static long GetBytes( this MySqlDataReader reader, string table, string column, long dataOffset, byte[]? buffer, int bufferOffset, int length )
+            => reader.GetBytes(reader.GetOrdinal(table, column), dataOffset, buffer, bufferOffset, length);
+        
         [return: NotNullIfNotNull(nameof(fallback))]
         public static byte? GetNullableByte( this MySqlDataReader reader, string column, byte? fallback = null )
             => reader.TryGetByte(column, out byte value) ? value : fallback;
