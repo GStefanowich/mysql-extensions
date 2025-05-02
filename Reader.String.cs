@@ -3,6 +3,9 @@ using MySqlConnector;
 
 namespace TheElm.MySql {
     public static partial class Reader {
+        public static string GetString( this MySqlDataReader reader, string table, string column )
+            => reader.GetString(reader.GetOrdinal(table, column));
+        
         public static string? GetNullableString( this MySqlDataReader reader, string column )
             => reader.TryGetString(column, out string? value) ? value : null;
         
@@ -10,10 +13,10 @@ namespace TheElm.MySql {
             => reader.TryGetString(table, column, out string? value) ? value : null;
         
         public static bool TryGetString( this MySqlDataReader reader, string column, [NotNullWhen(true)] out string? value )
-            => reader.TryGetString(reader.GetOrdinal(column, null), out value);
+            => reader.TryGetString(reader.GetOrdinal(null, column), out value);
         
         public static bool TryGetString( this MySqlDataReader reader, string table, string column, [NotNullWhen(true)] out string? value )
-            => reader.TryGetString(reader.GetOrdinal(column, table), out value);
+            => reader.TryGetString(reader.GetOrdinal(table, column), out value);
         
         public static bool TryGetString( this MySqlDataReader reader, int ordinal, [NotNullWhen(true)] out string? value ) {
             if ( ordinal >= 0 && !reader.IsDBNull(ordinal) ) {

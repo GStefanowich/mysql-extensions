@@ -3,6 +3,9 @@ using MySqlConnector;
 
 namespace TheElm.MySql {
     public static partial class Reader {
+        public static int GetInt32( this MySqlDataReader reader, string table, string column )
+            => reader.GetInt32(reader.GetOrdinal(table, column));
+        
         [return: NotNullIfNotNull(nameof(fallback))]
         public static int? GetNullableInt32( this MySqlDataReader reader, string column, int? fallback = null )
             => reader.TryGetInt32(column, out int value) ? value : fallback;
@@ -12,10 +15,10 @@ namespace TheElm.MySql {
             => reader.TryGetInt32(table, column, out int value) ? value : fallback;
         
         public static bool TryGetInt32( this MySqlDataReader reader, string column, out int value )
-            => reader.TryGetInt32(reader.GetOrdinal(column, null), out value);
+            => reader.TryGetInt32(reader.GetOrdinal(null, column), out value);
         
         public static bool TryGetInt32( this MySqlDataReader reader, string table, string column, out int value )
-            => reader.TryGetInt32(reader.GetOrdinal(column, table), out value);
+            => reader.TryGetInt32(reader.GetOrdinal(table, column), out value);
         
         public static bool TryGetInt32( this MySqlDataReader reader, int ordinal, out int value ) {
             if ( ordinal >= 0 && !reader.IsDBNull(ordinal) ) {
@@ -27,6 +30,9 @@ namespace TheElm.MySql {
             return false;
         }
         
+        public static uint GetUInt32( this MySqlDataReader reader, string table, string column )
+            => reader.GetUInt32(reader.GetOrdinal(table, column));
+        
         [return: NotNullIfNotNull(nameof(fallback))]
         public static uint? GetNullableUInt32( this MySqlDataReader reader, string column, uint? fallback = null )
             => reader.TryGetUInt32(column, out uint value) ? value : fallback;
@@ -36,10 +42,10 @@ namespace TheElm.MySql {
             => reader.TryGetUInt32(table, column, out uint value) ? value : fallback;
         
         public static bool TryGetUInt32( this MySqlDataReader reader, string column, out uint value )
-            => reader.TryGetUInt32(reader.GetOrdinal(column, null), out value);
+            => reader.TryGetUInt32(reader.GetOrdinal(null, column), out value);
         
         public static bool TryGetUInt32( this MySqlDataReader reader, string table, string column, out uint value )
-            => reader.TryGetUInt32(reader.GetOrdinal(column, table), out value);
+            => reader.TryGetUInt32(reader.GetOrdinal(table, column), out value);
         
         public static bool TryGetUInt32( this MySqlDataReader reader, int ordinal, out uint value ) {
             if ( ordinal >= 0 && !reader.IsDBNull(ordinal) ) {

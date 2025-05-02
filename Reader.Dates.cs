@@ -4,19 +4,22 @@ using MySqlConnector;
 
 namespace TheElm.MySql {
     public static partial class Reader {
+        public static DateTime GetDateTime( this MySqlDataReader reader, string table, string column )
+            => reader.GetDateTime(reader.GetOrdinal(table, column));
+        
         [return: NotNullIfNotNull(nameof(fallback))]
-        public static DateTimeOffset? GetNullableDateTime( this MySqlDataReader reader, string column, DateTime? fallback = null )
+        public static DateTime? GetNullableDateTime( this MySqlDataReader reader, string column, DateTime? fallback = null )
             => reader.TryGetDateTime(column, out DateTime value) ? value : fallback;
         
         [return: NotNullIfNotNull(nameof(fallback))]
-        public static DateTimeOffset? GetNullableDateTime( this MySqlDataReader reader, string table, string column, DateTime? fallback = null )
+        public static DateTime? GetNullableDateTime( this MySqlDataReader reader, string table, string column, DateTime? fallback = null )
             => reader.TryGetDateTime(table, column, out DateTime value) ? value : fallback;
         
         public static bool TryGetDateTime( this MySqlDataReader reader, string column, out DateTime value )
-            => reader.TryGetDateTime(reader.GetOrdinal(column, null), out value);
+            => reader.TryGetDateTime(reader.GetOrdinal(null, column), out value);
         
         public static bool TryGetDateTime( this MySqlDataReader reader, string table, string column, out DateTime value )
-            => reader.TryGetDateTime(reader.GetOrdinal(column, table), out value);
+            => reader.TryGetDateTime(reader.GetOrdinal(table, column), out value);
         
         public static bool TryGetDateTime( this MySqlDataReader reader, int ordinal, out DateTime value ) {
             if ( ordinal >= 0 && !reader.IsDBNull(ordinal) ) {
@@ -28,6 +31,9 @@ namespace TheElm.MySql {
             return false;
         }
         
+        public static DateTimeOffset GetDateTimeOffset( this MySqlDataReader reader, string table, string column )
+            => reader.GetDateTimeOffset(reader.GetOrdinal(table, column));
+        
         [return: NotNullIfNotNull(nameof(fallback))]
         public static DateTimeOffset? GetNullableDateTimeOffset( this MySqlDataReader reader, string column, DateTimeOffset? fallback = null )
             => reader.TryGetDateTimeOffset(column, out DateTimeOffset value) ? value : fallback;
@@ -37,10 +43,10 @@ namespace TheElm.MySql {
             => reader.TryGetDateTimeOffset(table, column, out DateTimeOffset value) ? value : fallback;
         
         public static bool TryGetDateTimeOffset( this MySqlDataReader reader, string column, out DateTimeOffset value )
-            => reader.TryGetDateTimeOffset(reader.GetOrdinal(column, null), out value);
+            => reader.TryGetDateTimeOffset(reader.GetOrdinal(null, column), out value);
         
         public static bool TryGetDateTimeOffset( this MySqlDataReader reader, string table, string column, out DateTimeOffset value )
-            => reader.TryGetDateTimeOffset(reader.GetOrdinal(column, table), out value);
+            => reader.TryGetDateTimeOffset(reader.GetOrdinal(table, column), out value);
         
         public static bool TryGetDateTimeOffset( this MySqlDataReader reader, int ordinal, out DateTimeOffset value ) {
             if ( ordinal >= 0 && !reader.IsDBNull(ordinal) ) {
@@ -52,6 +58,9 @@ namespace TheElm.MySql {
             return false;
         }
         
+        public static DateOnly? GetDateOnly( this MySqlDataReader reader, string table, string column )
+            => reader.GetDateOnly(reader.GetOrdinal(table, column));
+        
         [return: NotNullIfNotNull(nameof(fallback))]
         public static DateOnly? GetNullableDateOnly( this MySqlDataReader reader, string column, DateOnly? fallback = null )
             => reader.TryGetDateOnly(column, out DateOnly value) ? value : fallback;
@@ -61,10 +70,10 @@ namespace TheElm.MySql {
             => reader.TryGetDateOnly(table, column, out DateOnly value) ? value : fallback;
         
         public static bool TryGetDateOnly( this MySqlDataReader reader, string column, out DateOnly value )
-            => reader.TryGetDateOnly(reader.GetOrdinal(column, null), out value);
+            => reader.TryGetDateOnly(reader.GetOrdinal(null, column), out value);
         
         public static bool TryGetDateOnly( this MySqlDataReader reader, string table, string column, out DateOnly value )
-            => reader.TryGetDateOnly(reader.GetOrdinal(column, table), out value);
+            => reader.TryGetDateOnly(reader.GetOrdinal(table, column), out value);
         
         public static bool TryGetDateOnly( this MySqlDataReader reader, int ordinal, out DateOnly value ) {
             if ( ordinal >= 0 && !reader.IsDBNull(ordinal) ) {
@@ -76,6 +85,9 @@ namespace TheElm.MySql {
             return false;
         }
         
+        public static MySqlDateTime GetMySqlDateTime( this MySqlDataReader reader, string table, string column )
+            => reader.GetMySqlDateTime(reader.GetOrdinal(table, column));
+        
         [return: NotNullIfNotNull(nameof(fallback))]
         public static MySqlDateTime? GetNullableMySqlDateTime( this MySqlDataReader reader, string column, MySqlDateTime? fallback = null )
             => reader.TryGetMySqlDateTime(column, out MySqlDateTime value) ? value : fallback;
@@ -85,10 +97,10 @@ namespace TheElm.MySql {
             => reader.TryGetMySqlDateTime(table, column, out MySqlDateTime value) ? value : fallback;
         
         public static bool TryGetMySqlDateTime( this MySqlDataReader reader, string column, out MySqlDateTime value )
-            => reader.TryGetMySqlDateTime(reader.GetOrdinal(column, null), out value);
+            => reader.TryGetMySqlDateTime(reader.GetOrdinal(null, column), out value);
         
         public static bool TryGetMySqlDateTime( this MySqlDataReader reader, string table, string column, out MySqlDateTime value )
-            => reader.TryGetMySqlDateTime(reader.GetOrdinal(column, table), out value);
+            => reader.TryGetMySqlDateTime(reader.GetOrdinal(table, column), out value);
         
         public static bool TryGetMySqlDateTime( this MySqlDataReader reader, int ordinal, out MySqlDateTime value ) {
             if ( ordinal >= 0 && !reader.IsDBNull(ordinal) ) {

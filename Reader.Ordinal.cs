@@ -8,10 +8,10 @@ namespace TheElm.MySql {
         /// Get the Ordinal for a Column name
         /// </summary>
         /// <param name="reader">MySql reader</param>
-        /// <param name="column">Column name to read the ordinal for</param>
         /// <param name="table">Table name to read the ordinal for</param>
+        /// <param name="column">Column name to read the ordinal for</param>
         /// <returns>Ordinal value, -1 if not found</returns>
-        public static int GetOrdinal( this MySqlDataReader reader, string column, string? table ) {
+        public static int GetOrdinal( this MySqlDataReader reader, string? table, string column ) {
             foreach ( DbColumn dbColumn in reader.GetColumnSchema() ) {
                 if (
                     dbColumn.ColumnOrdinal is int ordinal
@@ -33,7 +33,7 @@ namespace TheElm.MySql {
         /// <param name="ordinal">Ordinal out value</param>
         /// <returns>If the ordinal was found in the reader</returns>
         public static bool TryGetOrdinal( this MySqlDataReader reader, string column, out int ordinal ) {
-            ordinal = reader.GetOrdinal(column, table: null);
+            ordinal = reader.GetOrdinal(table: null, column: column);
             return ordinal >= 0 && ordinal < reader.FieldCount;
         }
         
@@ -46,7 +46,7 @@ namespace TheElm.MySql {
         /// <param name="ordinal">Ordinal out value</param>
         /// <returns>If the ordinal was found in the reader</returns>
         public static bool TryGetOrdinal( this MySqlDataReader reader, string table, string column, out int ordinal ) {
-            ordinal = reader.GetOrdinal(column, table);
+            ordinal = reader.GetOrdinal(table, column);
             return ordinal >= 0 && ordinal < reader.FieldCount;
         }
     }
