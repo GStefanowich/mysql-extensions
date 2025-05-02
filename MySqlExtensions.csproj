@@ -19,7 +19,7 @@
         <!-- Package Information -->
         <ProductName>TheElm.MySql</ProductName>
         <Authors>Greg Stefanowich</Authors>
-        <Description>Library for combing LINQ and MySqlConnector</Description>
+        <Description>Library for combining LINQ and MySqlConnector</Description>
         
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
