@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using MySqlConnector;
@@ -82,20 +83,23 @@ namespace TheElm.MySql {
             private readonly MySqlDataSource? Database;
             private readonly MySqlConnection? Connection;
             private readonly MySqlCommand Command;
+            private readonly CommandBehavior Behavior;
             
             public AsyncDataReaderEnumerable(
                 MySqlDataSource? database,
                 MySqlConnection? connection,
-                MySqlCommand command
+                MySqlCommand command,
+                CommandBehavior behavior = CommandBehavior.Default
             ) {
                 this.Database = database;
                 this.Connection = connection;
                 this.Command = command;
+                this.Behavior = behavior;
             }
             
             /// <inheritdoc />
             public IAsyncEnumerator<MySqlDataReader> GetAsyncEnumerator( CancellationToken cancellationToken = default )
-                => new AsyncDataReaderEnumerator(this.Command, this.Connection, this.Database, cancellationToken);
+                => new AsyncDataReaderEnumerator(this.Command, this.Connection, this.Database, this.Behavior, cancellationToken);
         }
         
         private sealed class AsyncDataReaderEnumerator : IAsyncEnumerator<MySqlDataReader> {
@@ -104,6 +108,7 @@ namespace TheElm.MySql {
             
             private readonly MySqlDataSource? Database;
             private readonly MySqlCommand Command;
+            private readonly CommandBehavior Behavior;
             
             private MySqlConnection? Connection { get => this.Command.Connection; set => this.Command.Connection = value; }
             private MySqlDataReader? Reader;
@@ -112,6 +117,7 @@ namespace TheElm.MySql {
                 MySqlCommand command,
                 MySqlConnection? connection = null,
                 MySqlDataSource? database = null,
+                CommandBehavior behavior = CommandBehavior.Default,
                 CancellationToken cancellation = default
             ) {
                 if ( database is null && connection is null ) {
@@ -119,8 +125,9 @@ namespace TheElm.MySql {
                 }
                 
                 this.Command = command;
-                this.Database = database;
                 this.Connection = connection;
+                this.Database = database;
+                this.Behavior = behavior;
                 this.CancellationToken = cancellation;
                 this.CloseConnection = database is not null;
             }
@@ -142,7 +149,7 @@ namespace TheElm.MySql {
                 }
                 
                 // Execute the query and begin reading if we haven't
-                this.Reader ??= await this.Command.ExecuteReaderAsync(this.CancellationToken);
+                this.Reader ??= await this.Command.ExecuteReaderAsync(this.Behavior, this.CancellationToken);
                 
                 // Read the new row
                 return await this.Reader.ReadAsync(this.CancellationToken);

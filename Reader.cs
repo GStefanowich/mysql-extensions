@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using MySqlConnector;
 
 namespace TheElm.MySql {
@@ -81,15 +82,18 @@ namespace TheElm.MySql {
             private readonly MySqlDataSource? Database;
             private readonly MySqlConnection? Connection;
             private readonly MySqlCommand Command;
+            private readonly CommandBehavior Behavior;
             
             public DataReaderEnumerable(
                 MySqlDataSource? database,
                 MySqlConnection? connection,
-                MySqlCommand command
+                MySqlCommand command,
+                CommandBehavior behavior = CommandBehavior.Default
             ) {
                 this.Database = database;
                 this.Connection = connection;
                 this.Command = command;
+                this.Behavior = behavior;
             }
             
             /// <inheritdoc />
@@ -98,7 +102,7 @@ namespace TheElm.MySql {
             
             /// <inheritdoc />
             public IEnumerator<MySqlDataReader> GetEnumerator()
-                => new DataReaderEnumerator(this.Command, this.Connection, this.Database);
+                => new DataReaderEnumerator(this.Command, this.Connection, this.Database, this.Behavior);
         }
         
         private sealed class DataReaderEnumerator : IEnumerator<MySqlDataReader> {
@@ -106,6 +110,7 @@ namespace TheElm.MySql {
             
             private readonly MySqlDataSource? Database;
             private readonly MySqlCommand Command;
+            private readonly CommandBehavior Behavior;
             
             private MySqlConnection? Connection { get => this.Command.Connection; set => this.Command.Connection = value; }
             private MySqlDataReader? Reader;
@@ -113,15 +118,17 @@ namespace TheElm.MySql {
             public DataReaderEnumerator(
                 MySqlCommand command,
                 MySqlConnection? connection = null,
-                MySqlDataSource? database = null
+                MySqlDataSource? database = null,
+                CommandBehavior behavior = CommandBehavior.Default
             ) {
                 if ( database is null && connection is null ) {
                     throw new InvalidOperationException("Must provide a datasource or a datasource connection");
                 }
                 
                 this.Command = command;
-                this.Database = database;
                 this.Connection = connection;
+                this.Database = database;
+                this.Behavior = behavior;
                 this.CloseConnection = database is not null;
             }
             
@@ -143,7 +150,7 @@ namespace TheElm.MySql {
                 }
                 
                 // Execute the query and begin reading if we haven't
-                this.Reader ??= this.Command.ExecuteReader();
+                this.Reader ??= this.Command.ExecuteReader(this.Behavior);
                 
                 // Read the new row
                 return this.Reader.Read();

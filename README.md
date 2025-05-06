@@ -115,6 +115,10 @@ await foreach( MySqlDataReader reader in source.ReadAsync("SELECT `col` FROM `ta
 
 ## Versions
 
+### 1.7.0
+
+- Added `MySqlCommand` re-usability
+
 ### 1.6.0
 
 - Added `GetBinaryString` helper method for reading binary columns
