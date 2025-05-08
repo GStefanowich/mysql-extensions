@@ -30,7 +30,7 @@ namespace TheElm.MySql {
             })).ToArray();
             
             if ( parameters.Length % columns.Count != 0 ) {
-                throw new Exception("Unequal amount of parameters per row given");
+                throw new ArgumentException("Unequal amount of parameters per row given", nameof(parameterSet));
             }
             
             StringBuilder builder = new();
