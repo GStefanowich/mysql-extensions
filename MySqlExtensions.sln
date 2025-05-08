@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySqlExtensions", "MySqlExtensions.csproj", "{6FCFCD6D-8A79-493F-8A42-59D0A47209CB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySqlExtensions", "MySqlExtensions\MySqlExtensions.csproj", "{F0623BA3-D80F-4670-B6E9-F7D808691930}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySqlExtensions.Tests", "MySqlExtensions.Tests\MySqlExtensions.Tests.csproj", "{F1F1E93A-70A3-4D89-8201-D9305518B3FE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -8,9 +10,13 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6FCFCD6D-8A79-493F-8A42-59D0A47209CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6FCFCD6D-8A79-493F-8A42-59D0A47209CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6FCFCD6D-8A79-493F-8A42-59D0A47209CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6FCFCD6D-8A79-493F-8A42-59D0A47209CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0623BA3-D80F-4670-B6E9-F7D808691930}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0623BA3-D80F-4670-B6E9-F7D808691930}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0623BA3-D80F-4670-B6E9-F7D808691930}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0623BA3-D80F-4670-B6E9-F7D808691930}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1F1E93A-70A3-4D89-8201-D9305518B3FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1F1E93A-70A3-4D89-8201-D9305518B3FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1F1E93A-70A3-4D89-8201-D9305518B3FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1F1E93A-70A3-4D89-8201-D9305518B3FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -9,9 +9,7 @@ namespace TheElm.MySql {
         #region Command
         
         public static Task<int> ExecuteNonQueryAsync( this MySqlCommand command, IEnumerable<MySqlParameter> parameters, CancellationToken cancellation = default ) {
-            command.Parameters.Clear();
-            command.Parameters.AddRange(parameters);
-            
+            command.Parameters.Set(parameters);
             return command.ExecuteNonQueryAsync(cancellation);
         }
         

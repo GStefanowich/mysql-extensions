@@ -29,7 +29,7 @@
         <NeutralLanguage>en</NeutralLanguage>
     </PropertyGroup>
     <ItemGroup>
-        <None Include="README.md" Pack="true" PackagePath=""/>
+        <None Include="../README.md" Pack="true" PackagePath=""/>
     </ItemGroup>
     <ItemGroup>
       <PackageReference Include="MySqlConnector" Version="2.4.0" />
